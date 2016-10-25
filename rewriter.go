@@ -1,6 +1,8 @@
 package snet
 
-import "io"
+import (
+	"io"
+)
 
 type rewriter struct {
 	data  []byte
@@ -35,6 +37,12 @@ func (r *rewriter) rewrite(w io.Writer, writeCount, readCount uint64) bool {
 		begin = (r.begin + (len(r.data) - n)) % len(r.data)
 		end   = begin + n
 	)
+	if end > len(r.data) {
+		end = len(r.data)
+	}
+	if _, err := w.Write(r.data[begin:end]); err != nil {
+		return false
+	}
 
 	n -= end - begin
 	if n == 0 {

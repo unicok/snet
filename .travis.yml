@@ -1,0 +1,16 @@
+language: go
+
+go:
+  - 1.7
+
+install:
+    - go get github.com/mattn/goveralls
+    - go get -t -v ./...
+
+script:
+    - go vet -x github.com/unicok/snet
+    - go install github.com/unicok/snet
+    - go test -race -coverprofile=coverage.txt -covermode=atomic -v github.com/unicok/snet
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
